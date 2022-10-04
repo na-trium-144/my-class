@@ -1,0 +1,14 @@
+<html>
+<head>
+  <title>MyClass</title>
+</head>
+<body>
+  <p>{{ day }}曜 {{ cl }}限 の資料</p>
+  <p>{{ targetdir }}</p>
+  <ul>
+    {% for f in files %}
+      <li><a href="/{{ day }}/{{ cl }}/{{ f }}" target="_blank">{{ f }}</a></li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
