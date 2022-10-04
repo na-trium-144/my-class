@@ -3,7 +3,7 @@
   <title>MyClass</title>
 </head>
 <body>
-  <p>{{ "月火水木金土日"[day] }}曜 {{ cl }}限 の資料</p>
+  <p>{{ "月火水木金土日"[day] }}曜 {{ cl + 1 }}限 の資料</p>
   <p>{{ targetdir }}</p>
   <ul>
     {% for f in files %}
