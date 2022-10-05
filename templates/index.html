@@ -1,14 +1,48 @@
 <html>
 <head>
   <title>MyClass</title>
+  <link rel="stylesheet" href="/static/css/bulma.min.css">
 </head>
 <body>
-  <p>{{ "月火水木金土日"[day] }}曜 {{ cl + 1 }}限 の資料</p>
-  <p>{{ targetdir }}</p>
-  <ul>
+  <div class="tabs is-centered">
+    <ul>
+      {% for d in range(7) %}
+        {% if d == day %}
+        <li class="is-active">
+        {% else %}
+        <li>
+        {% endif %}
+          <a href="/{{ d }}/{{ cl }}">
+            {{ "月火水木金土日"[d] }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <nav class="pagination is-centered">
+    <ul class="pagination-list">
+      {% for c in range(cl_length) %}
+        <li>
+          {% if c == cl %}
+          <a class="pagination-link is-current" href="/{{ day }}/{{ c }}">
+          {% else %}
+          <a class="pagination-link" href="/{{ day }}/{{ c }}">
+          {% endif %}
+            {{ c + 1 }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <table class="table is-fullwidth">
+    <thead>
+      <th>{{ cldir }}</th>
+    </thead>
     {% for f in files %}
-      <li><a href="/{{ day }}/{{ cl }}/{{ f }}" target="_blank">{{ f }}</a></li>
+      <tr>
+        <td><a href="/{{ day }}/{{ cl }}/{{ f }}" target="_blank">{{ f }}</a></td>
+      </tr>
     {% endfor %}
-  </ul>
+  </table>
 </body>
 </html>
