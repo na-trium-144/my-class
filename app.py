@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for, render_template, make_response
 from dotenv import dotenv_values
 import os
 import datetime
+import glob
 
 config = dotenv_values()  # take environment variables from .env.
 rootdir = config["ROOTDIR"]
@@ -29,6 +30,7 @@ def root(day=None, cl=None):
     files = []
     if cldir and os.path.exists(targetdir):
         files = os.listdir(targetdir)
+        files.sort(key=lambda x: os.path.getmtime(os.path.join(targetdir, x)))
         files = [f for f in files if f.endswith(".pdf") or f.endswith(".PDF")]
     return render_template("index.html", day=day, cl=cl, cl_length=cl_length, files=files, cldir=cldir)
 
