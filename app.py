@@ -6,6 +6,8 @@ import datetime
 import glob
 import json
 
+import markdown
+
 # config = dotenv_values()  # take environment variables from .env.
 config = {
 	"rootdir":"",
@@ -58,7 +60,12 @@ def root(day=None, cl=None):
         files = os.listdir(targetdir)
         files.sort(key=lambda x: os.path.getmtime(os.path.join(targetdir, x)))
         files = [f for f in files if f.endswith(".pdf") or f.endswith(".PDF")]
-    return render_template("index.html", day=day, cl=cl, cl_length=cl_length, files=files, cldir=cldir)
+
+    description = ""
+    if day < len(config["description"]) and cl < len(config["description"][day]):
+        description = markdown.markdown(config["description"][day][cl])
+
+    return render_template("index.html", day=day, cl=cl, cl_length=cl_length, files=files, cldir=cldir, description=description)
 
 def getdir(day, cl):
     dirs = ""

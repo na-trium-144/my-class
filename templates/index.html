@@ -36,7 +36,7 @@
   </nav>
   <div class="m-2">
     <p class="title is-4">{{ cldir }}</p>
-    <div class="block">{{ description }}</div>
+    <div class="block">{{ description.replace("<a ", "<a target='_blank' ")|safe }}</div>
     <table class="table is-fullwidth">
       <thead>
         <th>ファイル一覧</th>

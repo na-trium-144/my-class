@@ -9,7 +9,7 @@
   * またはpipenvを使ってる人はPipfileを使用
 
 ```bash
-pip3 install flask
+pip3 install flask markdown
 ```
 
 * サーバー起動
