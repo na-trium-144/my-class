@@ -60,12 +60,24 @@ def root(day=None, cl=None):
         files = os.listdir(targetdir)
         files.sort(key=lambda x: os.path.getmtime(os.path.join(targetdir, x)))
         files = [f for f in files if f.endswith(".pdf") or f.endswith(".PDF")]
-
-    description = ""
-    if day < len(config["description"]) and cl < len(config["description"][day]):
-        description = markdown.markdown(config["description"][day][cl])
+    description = markdown.markdown(getdescription(day, cl))
 
     return render_template("index.html", day=day, cl=cl, cl_length=cl_length, files=files, cldir=cldir, description=description)
+
+@app.route("/<day>/<cl>/edit")
+def editpage(day=None, cl=None):
+    day = int(day)
+    cl = int(cl)
+    cl_length = len(config["time"])
+    cldir = getdir(day, cl)
+    description_raw = getdescription(day, cl)
+
+    return render_template("edit.html", day=day, cl=cl, cl_length=cl_length, cldir=cldir, description_raw=description_raw)
+
+def getdescription(day, cl):
+    if day < len(config["description"]) and cl < len(config["description"][day]):
+        return config["description"][day][cl]
+    return ""
 
 def getdir(day, cl):
     dirs = ""
