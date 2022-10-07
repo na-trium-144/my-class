@@ -34,15 +34,19 @@
       {% endfor %}
     </ul>
   </nav>
-  <table class="table is-fullwidth">
-    <thead>
-      <th>{{ cldir }}</th>
-    </thead>
-    {% for f in files %}
-      <tr>
-        <td><a href="/{{ day }}/{{ cl }}/{{ f }}" target="_blank">{{ f }}</a></td>
-      </tr>
-    {% endfor %}
-  </table>
+  <div class="m-2">
+    <p class="title is-4">{{ cldir }}</p>
+    <div class="block">{{ description }}</div>
+    <table class="table is-fullwidth">
+      <thead>
+        <th>ファイル一覧</th>
+      </thead>
+      {% for f in files %}
+        <tr>
+          <td><a href="/{{ day }}/{{ cl }}/{{ f }}" target="_blank">{{ f }}</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
 </body>
 </html>

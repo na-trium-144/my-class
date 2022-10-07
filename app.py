@@ -1,12 +1,38 @@
 #!/usr/bin/env python3
 from flask import Flask, redirect, url_for, render_template, make_response
-from dotenv import dotenv_values
+# from dotenv import dotenv_values
 import os
 import datetime
 import glob
+import json
 
-config = dotenv_values()  # take environment variables from .env.
-rootdir = config["ROOTDIR"]
+# config = dotenv_values()  # take environment variables from .env.
+config = {
+	"rootdir":"",
+	"time":[],
+	"dirs":[
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+	],
+	"descriptions":[
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+	]
+}
+if os.path.exists("config.json"):
+    with open("config.json", "r") as cf:
+        config = json.loads(cf.read())
+rootdir = config["rootdir"]
 
 app = Flask(__name__)
 
@@ -17,14 +43,14 @@ def root(day=None, cl=None):
         now = datetime.datetime.now()
         day = now.weekday() #月=0
         cl = 0
-        for cltime in config["TIME"].split():
+        for cltime in config["time"]:
             if now.time() < datetime.time(hour=int(cltime[:2]), minute=int(cltime[-2:]), second=0):
                 break
             cl += 1
     else:
         day = int(day)
         cl = int(cl)
-    cl_length = len(config["TIME"].split())
+    cl_length = len(config["time"])
     cldir = getdir(day, cl)
     targetdir = os.path.join(rootdir, cldir)
     files = []
@@ -36,8 +62,7 @@ def root(day=None, cl=None):
 
 def getdir(day, cl):
     dirs = ""
-    if f"DIR{day}" in config:
-        dirs = config[f"DIR{day}"].split(":")
+    dirs = config["dirs"][day]
     targetdir = ""
     if cl >= 0 and cl < len(dirs):
         targetdir = dirs[cl]
