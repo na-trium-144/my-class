@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, redirect, url_for, render_template, make_response
+from flask import Flask, redirect, url_for, render_template, request
 # from dotenv import dotenv_values
 import os
 import datetime
@@ -7,6 +7,7 @@ import glob
 import json
 
 import markdown
+import urllib
 
 # config = dotenv_values()  # take environment variables from .env.
 config = {
@@ -39,7 +40,7 @@ rootdir = config["rootdir"]
 app = Flask(__name__)
 
 @app.route("/")
-@app.route("/<day>/<cl>")
+@app.route("/<day>/<cl>/")
 def root(day=None, cl=None):
     if cl is None:
         now = datetime.datetime.now()
@@ -60,19 +61,37 @@ def root(day=None, cl=None):
         files = os.listdir(targetdir)
         files.sort(key=lambda x: os.path.getmtime(os.path.join(targetdir, x)))
         files = [f for f in files if f.endswith(".pdf") or f.endswith(".PDF")]
-    description = markdown.markdown(getdescription(day, cl))
+    description_raw = getdescription(day, cl)
+    description = markdown.markdown(description_raw)
 
-    return render_template("index.html", day=day, cl=cl, cl_length=cl_length, files=files, cldir=cldir, description=description)
+    return render_template("index.html",
+        day=day, cl=cl, cl_length=cl_length, files=files,
+        cldir=cldir, description=description, description_raw=description_raw)
 
-@app.route("/<day>/<cl>/edit")
-def editpage(day=None, cl=None):
+# @app.route("/<day>/<cl>/edit")
+# def editpage(day=None, cl=None):
+#     day = int(day)
+#     cl = int(cl)
+#     cl_length = len(config["time"])
+#     cldir = getdir(day, cl)
+#     description_raw = getdescription(day, cl)
+#
+#     return render_template("edit.html", day=day, cl=cl, cl_length=cl_length, cldir=cldir, description_raw=description_raw)
+
+@app.route("/<day>/<cl>/edit", methods=["post"])
+def editsave(day=None, cl=None):
     day = int(day)
     cl = int(cl)
-    cl_length = len(config["time"])
-    cldir = getdir(day, cl)
-    description_raw = getdescription(day, cl)
+    description_raw = request.form["description"]
+    while day >= len(config["description"]):
+        config["description"].append([])
+    while cl >= len(config["description"][day]):
+        config["description"][day].append("")
+    config["description"][day][cl] = description_raw
+    with open("config.json", "w") as cf:
+        cf.write(json.dumps(config))
+    return redirect(url_for("root", day=day, cl=cl))
 
-    return render_template("edit.html", day=day, cl=cl, cl_length=cl_length, cldir=cldir, description_raw=description_raw)
 
 def getdescription(day, cl):
     if day < len(config["description"]) and cl < len(config["description"][day]):

@@ -2,6 +2,16 @@
 <head>
   <title>MyClass</title>
   <link rel="stylesheet" href="/static/css/bulma.min.css">
+  <script>
+    function desc_view(){
+      document.getElementById('desc_view').className = "is-block";
+      document.getElementById('desc_edit').className = "is-hidden";
+    }
+    function desc_edit(){
+      document.getElementById('desc_view').className = "is-hidden";
+      document.getElementById('desc_edit').className = "is-block";
+    }
+  </script>
 </head>
 <body>
   <div class="tabs is-centered">
@@ -36,7 +46,30 @@
   </nav>
   <div class="m-2">
     <p class="title is-4">{{ cldir }}</p>
-    <div class="block">{{ description.replace("<a ", "<a target='_blank' ") | safe }}</div>
+    <div id="desc_view" class="is-block">
+      <div class="block">
+        <div>
+          {{ description.replace("<a ", "<a target='_blank' ") | safe }}
+        </div>
+        <button class="button is-primary" onClick="desc_edit()">説明を編集</a>
+      </div>
+    </div>
+    <div id="desc_edit" class="is-hidden">
+      <form method="post" action="edit">
+        <div class="field">
+          <label class="label">説明(Markdown)</label>
+          <div class="control">
+            <textarea class="textarea is-expanded" name="description">{{ description_raw }}</textarea>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <input type="submit" class="button is-primary" value="保存"></input>
+            <button class="button is-warning" onClick="desc_view()">キャンセル</a>
+          </div>
+        </div>
+      </form>
+    </div>
     <table class="table is-fullwidth">
       <thead>
         <th>ファイル一覧</th>
