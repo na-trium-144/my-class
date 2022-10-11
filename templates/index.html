@@ -31,6 +31,15 @@
   </div>
   <nav class="pagination is-centered">
     <ul class="pagination-list">
+      <li>
+        {% if is_root %}
+        <a class="pagination-link is-current" href="/">
+          {% else %}
+          <a class="pagination-link" href="/">
+            {% endif %}
+            Now
+          </a>
+        </li>
       {% for c in range(cl_length) %}
         <li>
           {% if c == cl %}
@@ -51,7 +60,7 @@
         <div>
           {{ description.replace("<a ", "<a target='_blank' ") | safe }}
         </div>
-        <button class="button is-primary" onClick="desc_edit()">説明を編集</a>
+        <button class="button is-primary is-small is-rounded" onClick="desc_edit()">説明を編集</a>
       </div>
     </div>
     <div id="desc_edit" class="is-hidden">
@@ -64,11 +73,14 @@
         </div>
         <div class="field">
           <div class="control">
-            <input type="submit" class="button is-primary" value="保存"></input>
-            <a href=# class="button is-warning" onClick="desc_view()">キャンセル</a>
+            <input type="submit" class="button is-primary is-small is-rounded" value="保存"></input>
+            <a href=# class="button is-warning is-small is-rounded" onClick="desc_view()">キャンセル</a>
           </div>
         </div>
       </form>
+    </div>
+    <div class="mt-1">
+      <button class="button is-info is-small is-rounded" onClick="fetch('/{{ day }}/{{ cl }}/open');">フォルダを開く</button>
     </div>
     <table class="table is-fullwidth">
       <thead>

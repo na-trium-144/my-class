@@ -5,7 +5,7 @@ import os
 import datetime
 import glob
 import json
-
+import subprocess
 import markdown
 import urllib
 
@@ -42,7 +42,9 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/<day>/<cl>/")
 def root(day=None, cl=None):
+    is_root = False
     if cl is None:
+        is_root = True
         now = datetime.datetime.now()
         day = now.weekday() #月=0
         cl = 0
@@ -65,7 +67,7 @@ def root(day=None, cl=None):
     description = markdown.markdown(description_raw)
 
     return render_template("index.html",
-        day=day, cl=cl, cl_length=cl_length, files=files,
+        is_root=is_root, day=day, cl=cl, cl_length=cl_length, files=files,
         cldir=cldir, description=description, description_raw=description_raw)
 
 # @app.route("/<day>/<cl>/edit")
@@ -105,6 +107,22 @@ def getdir(day, cl):
     if cl >= 0 and cl < len(dirs):
         targetdir = dirs[cl]
         return targetdir
+    return ""
+
+@app.route("/<day>/<cl>/open")
+def opendir(day, cl):
+    day = int(day)
+    cl = int(cl)
+    cldir = getdir(day, cl)
+    target = os.path.join(rootdir, cldir)
+    if cldir and os.path.exists(target):
+        try:
+            subprocess.Popen(["explorer.exe", target]) #windows
+        except:
+            try:
+                subprocess.Popen(["open", target]) #mac
+            except:
+                subprocess.Popen(["xdg-open", target]) #linux
     return ""
 
 @app.route("/<day>/<cl>/<filename>")
