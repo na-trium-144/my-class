@@ -11,9 +11,43 @@
       document.getElementById('desc_view').className = "is-hidden";
       document.getElementById('desc_edit').className = "is-block";
     }
+
+    function navbarBurgerCLick(){
+      document.getElementById('navbar-burger').classList.toggle('is-active');
+      document.getElementById('navbar-menu').classList.toggle('is-active');
+    }
   </script>
 </head>
 <body>
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <div class="title is-5">
+          MyClass
+
+        </div>
+      </div>
+      <a class="navbar-item" href="/">
+        {{ "月火水木金土日"[day] }}曜 {{ cl + 1 }}限: 〜{{ endtime }}
+      </a>
+      <a class="navbar-burger" id="navbar-burger" onclick="navbarBurgerCLick()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </a>
+    </div>
+    <div class="navbar-menu" id="navbar-menu">
+      <div class="navbar-start">
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a href="/config" class="button is-primary">Config</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
   <div class="tabs is-centered">
     <ul>
       {% for d in range(7) %}
@@ -31,15 +65,6 @@
   </div>
   <nav class="pagination is-centered">
     <ul class="pagination-list">
-      <li>
-        {% if is_root %}
-        <a class="pagination-link is-current" href="/">
-          {% else %}
-          <a class="pagination-link" href="/">
-            {% endif %}
-            Now
-          </a>
-        </li>
       {% for c in range(cl_length) %}
         <li>
           {% if c == cl %}

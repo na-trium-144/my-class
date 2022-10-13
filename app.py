@@ -67,7 +67,7 @@ def root(day=None, cl=None):
     description = markdown.markdown(description_raw)
 
     return render_template("index.html",
-        is_root=is_root, day=day, cl=cl, cl_length=cl_length, files=files,
+        is_root=is_root, day=day, cl=cl, cl_length=cl_length, files=files, endtime=config["time"][cl],
         cldir=cldir, description=description, description_raw=description_raw)
 
 # @app.route("/<day>/<cl>/edit")
