@@ -43,15 +43,17 @@ app = Flask(__name__)
 @app.route("/<day>/<cl>/")
 def root(day=None, cl=None):
     is_root = False
+    now = datetime.datetime.now()
+    nowday = now.weekday() #月=0
+    nowcl = 0
+    for cltime in config["time"]:
+        if now.time() < datetime.time(hour=int(cltime[:2]), minute=int(cltime[-2:]), second=0):
+            break
+        nowcl += 1
     if cl is None:
         is_root = True
-        now = datetime.datetime.now()
-        day = now.weekday() #月=0
-        cl = 0
-        for cltime in config["time"]:
-            if now.time() < datetime.time(hour=int(cltime[:2]), minute=int(cltime[-2:]), second=0):
-                break
-            cl += 1
+        day = nowday
+        cl = nowcl
     else:
         day = int(day)
         cl = int(cl)
@@ -67,7 +69,7 @@ def root(day=None, cl=None):
     description = markdown.markdown(description_raw)
 
     return render_template("index.html",
-        is_root=is_root, day=day, cl=cl, cl_length=cl_length, files=files, endtime=config["time"][cl],
+        is_root=is_root, day=day, cl=cl, nowday=nowday, nowcl=nowcl, cl_length=cl_length, files=files, nowendtime=config["time"][nowcl],
         cldir=cldir, description=description, description_raw=description_raw)
 
 # @app.route("/<day>/<cl>/edit")
