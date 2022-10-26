@@ -47,6 +47,7 @@ def root(day=None, cl=None):
     nowday = now.weekday() #月=0
     nowcl = 0
     for cltime in config["time"]:
+        nowendtime = cltime
         if now.time() < datetime.time(hour=int(cltime[:2]), minute=int(cltime[-2:]), second=0):
             break
         nowcl += 1
@@ -69,7 +70,7 @@ def root(day=None, cl=None):
     description = markdown.markdown(description_raw)
 
     return render_template("index.html",
-        is_root=is_root, day=day, cl=cl, nowday=nowday, nowcl=nowcl, cl_length=cl_length, files=files, nowendtime=config["time"][nowcl],
+        is_root=is_root, day=day, cl=cl, nowday=nowday, nowcl=nowcl, cl_length=cl_length, files=files, nowendtime=nowendtime,
         cldir=cldir, description=description, description_raw=description_raw)
 
 # @app.route("/<day>/<cl>/edit")
