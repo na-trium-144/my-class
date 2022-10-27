@@ -139,3 +139,6 @@ def getfile(day, cl, filename):
             res = make_response(f.read())
             res.headers["content-type"] = "application/pdf"
             return res
+
+if __name__=="__main__":
+    app.run(port=8000)
