@@ -1,0 +1,54 @@
+<html>
+<head>
+  <title>MyClass</title>
+  <link rel="stylesheet" href="/static/css/bulma.min.css">
+  <script>
+    function desc_view(){
+      document.getElementById('desc_view').className = "is-block";
+      document.getElementById('desc_edit').className = "is-hidden";
+    }
+    function desc_edit(){
+      document.getElementById('desc_view').className = "is-hidden";
+      document.getElementById('desc_edit').className = "is-block";
+    }
+
+    function navbarBurgerClick(){
+      document.getElementById('navbar-burger').classList.toggle('is-active');
+      document.getElementById('navbar-menu').classList.toggle('is-active');
+    }
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <div class="title is-5">
+          MyClass
+        </div>
+      </div>
+      {% block subtitle %}
+
+      {% endblock %}
+      <a class="navbar-burger" id="navbar-burger" onclick="navbarBurgerClick()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </a>
+    </div>
+    <div class="navbar-menu" id="navbar-menu">
+      <div class="navbar-start">
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            {% block buttons %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

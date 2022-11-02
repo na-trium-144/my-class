@@ -1,122 +1,81 @@
-<html>
-<head>
-  <title>MyClass</title>
-  <link rel="stylesheet" href="/static/css/bulma.min.css">
-  <script>
-    function desc_view(){
-      document.getElementById('desc_view').className = "is-block";
-      document.getElementById('desc_edit').className = "is-hidden";
-    }
-    function desc_edit(){
-      document.getElementById('desc_view').className = "is-hidden";
-      document.getElementById('desc_edit').className = "is-block";
-    }
-
-    function navbarBurgerCLick(){
-      document.getElementById('navbar-burger').classList.toggle('is-active');
-      document.getElementById('navbar-menu').classList.toggle('is-active');
-    }
-  </script>
-</head>
-<body>
-  <nav class="navbar">
-    <div class="navbar-brand">
-      <div class="navbar-item">
-        <div class="title is-5">
-          MyClass
-
-        </div>
-      </div>
-      <a class="navbar-item" href="/">
-        {{ "月火水木金土日"[nowday] }}曜 {{ nowcl + 1 }}限: 〜{{ nowendtime }}
-      </a>
-      <a class="navbar-burger" id="navbar-burger" onclick="navbarBurgerCLick()">
-        <span></span>
-        <span></span>
-        <span></span>
-      </a>
-    </div>
-    <div class="navbar-menu" id="navbar-menu">
-      <div class="navbar-start">
-      </div>
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <a href="/config" class="button is-primary">Config</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-  <div class="tabs is-centered">
-    <ul>
-      {% for d in range(7) %}
-        {% if d == day %}
-        <li class="is-active">
+{% extends 'base.html' %}
+{% block buttons %}
+<a href="/config/{{day}}" class="button is-primary">Config</a>
+{% endblock %}
+{% block subtitle %}
+<a class="navbar-item" href="/">
+{{"月火水木金土日"[nowday]}}曜 {{nowcl + 1}}限: 〜{{nowendtime}}
+</a>
+{% endblock %}
+{% block content %}
+<div class="tabs is-centered">
+  <ul>
+    {% for d in range(7) %}
+      {% if d == day %}
+      <li class="is-active">
+      {% else %}
+      <li>
+      {% endif %}
+        <a href="/{{ d }}/{{ cl }}">
+          {{ "月火水木金土日"[d] }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+<nav class="pagination is-centered">
+  <ul class="pagination-list">
+    {% for c in range(cl_length) %}
+      <li>
+        {% if c == cl %}
+        <a class="pagination-link is-current" href="/{{ day }}/{{ c }}">
         {% else %}
-        <li>
+        <a class="pagination-link" href="/{{ day }}/{{ c }}">
         {% endif %}
-          <a href="/{{ d }}/{{ cl }}">
-            {{ "月火水木金土日"[d] }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-  <nav class="pagination is-centered">
-    <ul class="pagination-list">
-      {% for c in range(cl_length) %}
-        <li>
-          {% if c == cl %}
-          <a class="pagination-link is-current" href="/{{ day }}/{{ c }}">
-          {% else %}
-          <a class="pagination-link" href="/{{ day }}/{{ c }}">
-          {% endif %}
-            {{ c + 1 }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  </nav>
-  <div class="m-2">
-    <p class="title is-4">{{ cldir }}</p>
-    <div id="desc_view" class="is-block">
-      <div class="block">
-        <div>
-          {{ description.replace("<a ", "<a target='_blank' ") | safe }}
-        </div>
-        <button class="button is-primary is-small is-rounded" onClick="desc_edit()">説明を編集</a>
+          {{ c + 1 }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+<div class="m-2">
+  <p class="title is-4">{{ cldir }}</p>
+  <div id="desc_view" class="is-block">
+    <div class="block">
+      <div>
+        {{ description.replace("<a ", "<a target='_blank' ") | safe }}
       </div>
+      <button class="button is-primary is-small is-rounded" onClick="desc_edit()">説明を編集</a>
     </div>
-    <div id="desc_edit" class="is-hidden">
-      <form method="post" action="/{{ day }}/{{ cl }}/edit">
-        <div class="field">
-          <label class="label">説明(Markdown)</label>
-          <div class="control">
-            <textarea class="textarea is-expanded" name="description">{{ description_raw }}</textarea>
-          </div>
-        </div>
-        <div class="field">
-          <div class="control">
-            <input type="submit" class="button is-primary is-small is-rounded" value="保存"></input>
-            <a href=# class="button is-warning is-small is-rounded" onClick="desc_view()">キャンセル</a>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="mt-1">
-      <button class="button is-info is-small is-rounded" onClick="fetch('/{{ day }}/{{ cl }}/open');">フォルダを開く</button>
-    </div>
-    <table class="table is-fullwidth">
-      <thead>
-        <th>ファイル一覧</th>
-      </thead>
-      {% for f in files %}
-        <tr>
-          <td><a href="/{{ day }}/{{ cl }}/{{ f }}" target="_blank">{{ f }}</a></td>
-        </tr>
-      {% endfor %}
-    </table>
   </div>
-</body>
-</html>
+  <div id="desc_edit" class="is-hidden">
+    <form method="post" action="/{{ day }}/{{ cl }}/edit">
+      <div class="field">
+        <label class="label">説明(Markdown)</label>
+        <div class="control">
+          <textarea class="textarea is-expanded" name="description">{{ description_raw }}</textarea>
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <input type="submit" class="button is-primary is-small is-rounded" value="保存"></input>
+          <a href=# class="button is-warning is-small is-rounded" onClick="desc_view()">キャンセル</a>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="mt-1">
+    <button class="button is-info is-small is-rounded" onClick="fetch('/{{ day }}/{{ cl }}/open');">フォルダを開く</button>
+  </div>
+  <table class="table is-fullwidth">
+    <thead>
+      <th>ファイル一覧</th>
+    </thead>
+    {% for f in files %}
+      <tr>
+        <td><a href="/{{ day }}/{{ cl }}/{{ f }}" target="_blank">{{ f }}</a></td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

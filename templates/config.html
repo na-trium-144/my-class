@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block buttons %}
+<a href="/" class="button is-warning">Back</a>
+{% endblock %}
+{% block subtitle %}
+<span class="navbar-item">Configuration</span>
+{% endblock %}
+{% block content %}
+<div class="tabs is-centered">
+  <ul>
+    {% for d in range(7) %}
+      {% if d == day %}
+      <li class="is-active">
+      {% else %}
+      <li>
+      {% endif %}
+        <a href="/config/{{ d }}">
+          {{ "月火水木金土日"[d] }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+<script>
+  async function selectdir(d, t){
+    const res = await fetch(`/config/selectdir/${d}/${t}`);
+    if(res.ok){
+      const val = await res.text();
+      document.getElementById(`dir${d}_${t}`).value = val.slice(val.lastIndexOf("/")+1);
+    }
+  }
+  async function settime(d, t){
+    const time = document.getElementById(`time${t}`).value;
+    const res = await fetch(`/config/settime/${d}/${t}/${time}`);
+  }
+</script>
+<div class="m-2">
+  {% for t in range(7) %}
+    <div class="field is-horizontal">
+      <div class="field-label">
+        <label class="label">{{ t + 1 }} : 〜</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" id="time{{t}}" placeholder="12:34" value="{{time[t]}}" size="5" onchange="(()=>{settime({{day}}, {{t}});})();">
+          </div>
+        </div>
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input class="input" type="text" id="dir{{day}}_{{t}}" placeholder="Directory" value="{{dir[t][dir[t].rfind("/")+1:]}}"readonly>
+          </div>
+          <div class="control">
+            <a class="button is-info" onclick="(()=>{selectdir({{day}}, {{t}});})();">
+              Browse...
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
