@@ -12,7 +12,7 @@
 pip3 install flask markdown
 ```
 
-* サーバー起動
+* サーバー起動(`pipenv run start`)
   * macだとデフォルトの5000は使えないっぽいので以下のように適当なポートを指定
 
 ```bash
