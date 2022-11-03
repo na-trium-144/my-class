@@ -130,6 +130,7 @@ def getfile(day, cl, filename):
     cl = int(cl)
     target = getdir(day, cl)
     # target = os.path.join(rootdir, cldir, filename)
+    target = os.path.join(target, filename)
     if os.path.exists(target):
         with open(target, "rb") as f:
             res = make_response(f.read())
