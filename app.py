@@ -151,10 +151,10 @@ def config_dir(day, cl):
     day = int(day)
     cl = int(cl)
     dir = subprocess.run(["./dialog.py", config["dirs"][day][cl]], stdout=subprocess.PIPE, encoding="utf-8").stdout
-    if dir:
-        config["dirs"][day][cl] = dir
-        saveconfig()
-        return dir
+    config["dirs"][day][cl] = dir
+    saveconfig()
+    return dir
+
 @app.route("/config/settime/<day>/<cl>/<tm>")
 def settime(day, cl, tm):
     day = int(day)
